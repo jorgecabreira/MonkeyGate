@@ -37,7 +37,7 @@ detector = IRDirectionDetector(IR_SENSOR_1, IR_SENSOR_2) # Initialize IRDirectio
 RFID = DorsetRFID650_Interface(baudrate = 57600)         # Initialize RFID reader
 
 # Initialize file manager
-directory =  "~/Documents/Data"  # Replace with pertinent directory
+directory =  "~/Documents/Data/MonkeyGate"  # Replace with pertinent directory
 file_logger = FileManager(directory)
 column_names = "date,object,state\n"
 log_file_path = file_logger.create_file(column_names)
@@ -69,11 +69,11 @@ def detect_pattern():
         
         # Animal got in
         if last_three[0] == "OUTER" and last_three[2] == "INNER" and re.fullmatch(r"[a-z]+", last_three[1]):
-            # animal_amount_logic(last_three[1],"in")
+            print(f"{events_timestamp_vector[-1]}, {last_three[1]}, IN")
             file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},{last_three[1]},in")
         # Animal got out
         elif last_three[0] == "INNER" and last_three[2] == "OUTER" and re.fullmatch(r"[a-z]+", last_three[1]):
-            # animal_amount_logic(last_three[1],"out")
+            print(f"{events_timestamp_vector[-1]}, {last_three[1]}, OUT")
             file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},{last_three[1]},out")
     
     if len(events_vector) == 6:
@@ -111,11 +111,11 @@ def rfid_loop():
             if datWaiting > 0:
                 returnedData = RFID.processFrame()
                 monkey_tag = binascii.b2a_hex(returnedData[3]).decode("utf-8")
-                print(f"MonkeyTag: {monkey_tag}")
+                print(f"Tag: {monkey_tag}")
                 timestampRFID = returnedData[-1].isoformat()
                 animal_name = animalID_searcher.get_animal_name_from_file(animalsID_file, monkey_tag)
                 if animal_name:
-                    print(f'Animal {animal_name} detected')
+                    print(f'Animal: {animal_name}')
                     if not events_vector or events_vector[-1] != animal_name:
                         events_vector.append(animal_name)
                         events_timestamp_vector.append(timestampRFID)

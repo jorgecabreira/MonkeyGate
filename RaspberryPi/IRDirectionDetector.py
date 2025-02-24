@@ -58,7 +58,7 @@ class IRDirectionDetector:
                 self.last_event = 'sensor_2'
 
         return None
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
     
     def log_beam_break(self):
         """
@@ -86,8 +86,8 @@ class IRDirectionDetector:
         self.sensor_2_prev_state = sensor_2_current_state
 
         return None
-=======
->>>>>>> Stashed changes
+#=======
+#>>>>>>> Stashed changes
 
 if __name__ == "__main__":
 
@@ -106,15 +106,15 @@ if __name__ == "__main__":
             if result:  # If a movement event is detected
                 direction, timestamp = result
                 print(f"Animal moved {direction} at {timestamp}")
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
                 
             beam_break = detector.log_beam_break()
             if beam_break:  # If a beam break is detected
                 sensor, timestamp = beam_break
                 print(f"{sensor} at {timestamp}")
                 
-=======
->>>>>>> Stashed changes
+#=======
+#>>>>>>> Stashed changes
             time.sleep(0.1)  # Small delay to reduce CPU usage
     except KeyboardInterrupt:
         print("Exiting Tunnel Direction Detector.")
