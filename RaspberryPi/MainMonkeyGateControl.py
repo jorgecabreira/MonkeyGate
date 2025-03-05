@@ -42,6 +42,9 @@ file_logger = FileManager(directory)
 column_names = "date,object,state\n"
 log_file_path = file_logger.create_file(column_names)
 print(f"File created: {log_file_path}")
+# Log Task initializing
+timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+file_logger.log_to_file(log_file_path,f"{timestamp},task,start")
 
 script_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the currently running script
 animalsID_file = "animalsID.csv"
