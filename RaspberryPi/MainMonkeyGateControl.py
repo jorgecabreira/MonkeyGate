@@ -39,12 +39,12 @@ RFID = DorsetRFID650_Interface(baudrate = 57600)         # Initialize RFID reade
 # Initialize file manager
 directory =  "~/Documents/Data/MonkeyGate"  # Replace with pertinent directory
 file_logger = FileManager(directory)
-column_names = "date,object,state\n"
+column_names = "date,object,state,monkey\n"
 log_file_path = file_logger.create_file(column_names)
 print(f"File created: {log_file_path}")
 # Log Task initializing
-timestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-file_logger.log_to_file(log_file_path,f"{timestamp},task,start")
+currentTimestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+file_logger.log_to_file(log_file_path,f"{currentTimestamp},session,start,-")
 
 script_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the currently running script
 animalsID_file = "animalsID.csv"
@@ -73,11 +73,11 @@ def detect_pattern():
         # Animal got in
         if last_three[0] == "OUTER" and last_three[2] == "INNER" and re.fullmatch(r"[a-z]+", last_three[1]):
             print(f"{events_timestamp_vector[-1]}, {last_three[1]}, IN")
-            file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},{last_three[1]},in")
+            file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},-,in,{last_three[1]}")
         # Animal got out
         elif last_three[0] == "INNER" and last_three[2] == "OUTER" and re.fullmatch(r"[a-z]+", last_three[1]):
             print(f"{events_timestamp_vector[-1]}, {last_three[1]}, OUT")
-            file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},{last_three[1]},out")
+            file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},-,out,{last_three[1]}")
     
     if len(events_vector) == 6:
         del events_vector[0]
@@ -91,6 +91,10 @@ def ir_loop():
             beam_break = detector.log_beam_break()
             if beam_break:
                 sensorID, timestampIR = beam_break
+                # Log event to file
+                currentTimestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                file_logger.log_to_file(log_file_path,f"{currentTimestamp},{sensorID},broke,-")
+                # Append event to vector
                 events_vector.append(sensorID)
                 events_timestamp_vector.append(timestampIR)
                 # print(f"{sensorID} sensor broken at {timestampIR}")
@@ -117,14 +121,20 @@ def rfid_loop():
                 print(f"Tag: {monkey_tag}")
                 timestampRFID = returnedData[-1].isoformat()
                 animal_name = animalID_searcher.get_animal_name_from_file(animalsID_file, monkey_tag)
+                
                 if animal_name:
                     print(f'Animal: {animal_name}')
                     if not events_vector or events_vector[-1] != animal_name:
                         events_vector.append(animal_name)
                         events_timestamp_vector.append(timestampRFID)
+                        detect_pattern()  # Detect pattern after a valid event is recorded
                         
-                        # Detect pattern
-                        detect_pattern()
+                # Log to file all RFID readings event those when the name of the animals is not know
+                else:
+                    animal_name = "-"
+                
+                currentTimestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                file_logger.log_to_file(log_file_path,f"{currentTimestamp},rfid,{monkey_tag},{animal_name}")
 
                     # print('Message timestamp: ' + timestampRFID)
                     # print('Transponder type: ' + binascii.b2a_hex(returnedData[2]).decode("utf-8"))
