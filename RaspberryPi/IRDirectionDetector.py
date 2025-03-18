@@ -23,24 +23,19 @@ class IRDirectionDetector:
     def __init__(self, sensor_1_pin, sensor_2_pin):
         """
         Initialize the IRDirectionDetector with two IR sensors.
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         :param sensor_1_pin: GPIO pin for the first IR sensor (outer sensor).
         :param sensor_2_pin: GPIO pin for the second IR sensor (inner sensor).
         """
         self.sensor_1 = Button(sensor_1_pin)
         self.sensor_2 = Button(sensor_2_pin)
         self.last_event = None
+        
+        self.sensor_1_prev_state = False
+        self.sensor_2_prev_state = False
 
     def detect_movement(self):
         """
         Detect movement and determine if an animal is entering or exiting the tunnel.
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         :return: Tuple ("In" or "Out", timestamp) or None if no movement detected.
         """
         if self.sensor_1.is_pressed:
@@ -58,7 +53,7 @@ class IRDirectionDetector:
                 self.last_event = 'sensor_2'
 
         return None
-#<<<<<<< Updated upstream
+
     
     def log_beam_break(self):
         """
@@ -86,8 +81,7 @@ class IRDirectionDetector:
         self.sensor_2_prev_state = sensor_2_current_state
 
         return None
-#=======
-#>>>>>>> Stashed changes
+
 
 if __name__ == "__main__":
 
@@ -106,15 +100,13 @@ if __name__ == "__main__":
             if result:  # If a movement event is detected
                 direction, timestamp = result
                 print(f"Animal moved {direction} at {timestamp}")
-#<<<<<<< Updated upstream
+
                 
             beam_break = detector.log_beam_break()
             if beam_break:  # If a beam break is detected
                 sensor, timestamp = beam_break
                 print(f"{sensor} at {timestamp}")
-                
-#=======
-#>>>>>>> Stashed changes
+
             time.sleep(0.1)  # Small delay to reduce CPU usage
     except KeyboardInterrupt:
         print("Exiting Tunnel Direction Detector.")
