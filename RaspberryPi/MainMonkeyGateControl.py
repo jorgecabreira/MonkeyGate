@@ -37,7 +37,7 @@ detector = IRDirectionDetector(IR_SENSOR_1, IR_SENSOR_2) # Initialize IRDirectio
 RFID = DorsetRFID650_Interface(baudrate = 57600)         # Initialize RFID reader
 
 # Initialize file manager
-directory =  "~/Documents/Data/MonkeyGate"  # Replace with pertinent directory
+directory =  "~/Documents/Data"  # Replace with pertinent directory
 file_logger = FileManager(directory)
 column_names = "date,object,state,monkey\n"
 log_file_path = file_logger.create_file(column_names)
