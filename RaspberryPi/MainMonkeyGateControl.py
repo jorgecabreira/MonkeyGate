@@ -71,12 +71,12 @@ def detect_pattern():
         last_three = events_vector[-3:]
         
         # Animal got in
-        if last_three[0] == "OUTER" and last_three[2] == "INNER" and re.fullmatch(r"[a-z]+", last_three[1]):
-            print(f"{events_timestamp_vector[-1]}, {last_three[1]}, IN")
+        if last_three[0] == "outer" and last_three[2] == "inner" and re.fullmatch(r"[a-z]+", last_three[1]):
+            print(f"{events_timestamp_vector[-1]}, {last_three[1]}, in")
             file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},-,in,{last_three[1]}")
         # Animal got out
-        elif last_three[0] == "INNER" and last_three[2] == "OUTER" and re.fullmatch(r"[a-z]+", last_three[1]):
-            print(f"{events_timestamp_vector[-1]}, {last_three[1]}, OUT")
+        elif last_three[0] == "inner" and last_three[2] == "outer" and re.fullmatch(r"[a-z]+", last_three[1]):
+            print(f"{events_timestamp_vector[-1]}, {last_three[1]}, out")
             file_logger.log_to_file(log_file_path,f"{events_timestamp_vector[-1]},-,out,{last_three[1]}")
     
     if len(events_vector) == 6:

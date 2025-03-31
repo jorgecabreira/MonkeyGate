@@ -41,14 +41,14 @@ class IRDirectionDetector:
         if self.sensor_1.is_pressed:
             if self.last_event == 'sensor_2':
                 self.last_event = None
-                return "OUT", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                return "out", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             else:
                 self.last_event = 'sensor_1'
 
         elif self.sensor_2.is_pressed:
             if self.last_event == 'sensor_1':
                 self.last_event = None
-                return "IN", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                return "in", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
             else:
                 self.last_event = 'sensor_2'
 
@@ -69,12 +69,12 @@ class IRDirectionDetector:
         if sensor_1_current_state and not self.sensor_1_prev_state:
             # Transition from non-broken to broken for Sensor 1
             self.sensor_1_prev_state = True  # Update the previous state
-            return "OUTER", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+            return "outerIR", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
 
         if sensor_2_current_state and not self.sensor_2_prev_state:
             # Transition from non-broken to broken for Sensor 2
             self.sensor_2_prev_state = True  # Update the previous state
-            return "INNER", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+            return "innerIR", time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
 
         # Reset previous state when sensors are not pressed
         self.sensor_1_prev_state = sensor_1_current_state
