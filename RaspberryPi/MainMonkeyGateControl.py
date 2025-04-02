@@ -42,8 +42,10 @@ file_logger = FileManager(directory)
 column_names = "date,object,state,monkey\n"
 log_file_path = file_logger.create_file(column_names)
 print(f"File created: {log_file_path}")
+
 # Log Task initializing
-currentTimestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+# currentTimestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+currentTimestamp = file_logger.get_current_datetime(False)
 file_logger.log_to_file(log_file_path,f"{currentTimestamp},session,start,-")
 
 script_dir = os.path.dirname(os.path.abspath(__file__)) # Get the directory of the currently running script
@@ -92,7 +94,7 @@ def ir_loop():
             if beam_break:
                 sensorID, timestampIR = beam_break
                 # Log event to file
-                currentTimestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                currentTimestamp = file_logger.get_current_datetime(False)
                 file_logger.log_to_file(log_file_path,f"{currentTimestamp},{sensorID},broke,-")
                 # Append event to vector
                 events_vector.append(sensorID)
@@ -133,7 +135,7 @@ def rfid_loop():
                 else:
                     animal_name = "-"
                 
-                currentTimestamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                currentTimestamp = file_logger.get_current_datetime(False)
                 file_logger.log_to_file(log_file_path,f"{currentTimestamp},rfid,{monkey_tag},{animal_name}")
 
                     # print('Message timestamp: ' + timestampRFID)
